@@ -2,9 +2,9 @@ package com.bikcodeh.googlemapsdemo
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -13,6 +13,8 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.bikcodeh.googlemapsdemo.databinding.ActivityMapsBinding
+import com.google.android.gms.maps.model.MapStyleOptions
+import java.lang.Exception
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -63,7 +65,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         // Add a marker in Sydney and move the camera
         val losAngeles = LatLng(34.051841600403634, -118.24025417915313)
         map.addMarker(MarkerOptions().position(losAngeles).title("Marker in Los Angeles"))
-        map.moveCamera(CameraUpdateFactory.newLatLng(losAngeles))
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(losAngeles, 10f))
         map.uiSettings.apply {
             //Buttons for zooming in and zooming out - false by default
             isZoomControlsEnabled = true
@@ -76,5 +78,23 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         //(left, top, right, bottom)
         //Padding to move the zooming controls when maybe the app is using some drawer
         //map.setPadding(0, 0, 300, 0)
+        setMapStyle(map)
+    }
+
+    private fun setMapStyle(map: GoogleMap) {
+        try {
+            val success = map.setMapStyle(
+                MapStyleOptions.loadRawResourceStyle(
+                    this,
+                    R.raw.map_style
+                )
+            )
+
+            if (!success) {
+               Log.e("Error aplying style", "Error Map")
+            }
+        } catch (e: Exception) {
+            Log.e("Error aplying style", e.message ?: "Error style map")
+        }
     }
 }
