@@ -47,5 +47,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val sydney = LatLng(-34.0, 151.0)
         map.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
         map.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+        map.uiSettings.apply {
+            //Buttons for zooming in and zooming out - false by default
+            isZoomControlsEnabled = true
+            //Gestures to zooming in or zooming out with taps and so on
+            //isZoomGesturesEnabled = false
+            //Not move the map, static position
+            //isScrollGesturesEnabled = false
+        }
     }
 }
