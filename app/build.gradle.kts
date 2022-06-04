@@ -1,7 +1,5 @@
-import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 import org.jetbrains.kotlin.konan.properties.Properties
 import java.io.FileInputStream
-import java.io.File
 
 plugins {
     id(Modules.Plugins.androidApplication)
@@ -37,9 +35,11 @@ android {
             buildConfigField(
                 type = "String",
                 name = "MAPS_API_KEY",
-                value =  apiKeyDebug
+                value =  '"'+apiKeyDebug+'"'
             )
-            manifestPlaceholders["API_KEY"] = apiKeyDebug
+            manifestPlaceholders.putAll(mapOf(
+                "API_KEY" to apiKeyDebug
+            ))
         }
 
         getByName("release") {
@@ -56,7 +56,7 @@ android {
             buildConfigField(
                 type = "String",
                 name = "MAPS_API_KEY",
-                value = apiKeyRelease
+                value = '"'+apiKeyRelease+'"'
             )
             manifestPlaceholders.putAll(mapOf(
                 "API_KEY" to apiKeyRelease

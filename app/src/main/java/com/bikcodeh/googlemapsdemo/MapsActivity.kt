@@ -27,8 +27,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
-        //Toast.makeText(this, BuildConfig.MAPS_API_KEY, Toast.LENGTH_SHORT).show()
-        Toast.makeText(this, BuildConfig.VERSION_NAME, Toast.LENGTH_SHORT).show()
     }
 
     /**
@@ -44,9 +42,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         map = googleMap
 
         // Add a marker in Sydney and move the camera
-        val sydney = LatLng(-34.0, 151.0)
-        map.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-        map.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+        val losAngeles = LatLng(34.051841600403634, -118.24025417915313)
+        map.addMarker(MarkerOptions().position(losAngeles).title("Marker in Los Angeles"))
+        map.moveCamera(CameraUpdateFactory.newLatLng(losAngeles))
         map.uiSettings.apply {
             //Buttons for zooming in and zooming out - false by default
             isZoomControlsEnabled = true
@@ -55,5 +53,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             //Not move the map, static position
             //isScrollGesturesEnabled = false
         }
+
+        //(left, top, right, bottom)
+        //Padding to move the zooming controls when maybe the app is using some drawer
+        //map.setPadding(0, 0, 300, 0)
     }
 }
