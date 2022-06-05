@@ -21,7 +21,7 @@ import com.google.android.gms.maps.model.Marker
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
+class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener, GoogleMap.OnMarkerDragListener {
 
     private lateinit var map: GoogleMap
     private lateinit var binding: ActivityMapsBinding
@@ -56,7 +56,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         /** Add a marker in Sydney and move the camera */
         val losAngeles = LatLng(34.051841600403634, -118.24025417915313)
         val newYork = LatLng(40.6976637,-74.119764)
-        val losAngelesMarker = map.addMarker(MarkerOptions().position(losAngeles).title("Marker in Los Angeles"))
+        //A marker set in los angeles draggable
+        val losAngelesMarker = map.addMarker(MarkerOptions().position(losAngeles).title("Marker in Los Angeles").draggable(true))
         losAngelesMarker?.tag = "Restaurant"
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(losAngeles, 10f))
         //map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraAndViewport.losAngeles))
@@ -69,6 +70,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             //isScrollGesturesEnabled = false
         }
         map.setOnMarkerClickListener(this)
+        map.setOnMarkerDragListener(this)
 
         /** (left, top, right, bottom)
             Padding to move the zooming controls when maybe the app is using some drawer */
@@ -141,5 +143,17 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
         //If returns true, the marker's title won't show it
         return false
+    }
+
+    override fun onMarkerDrag(marker: Marker) {
+        Log.i("MarkerDrag", marker.tag.toString())
+    }
+
+    override fun onMarkerDragEnd(marker: Marker) {
+        Log.i("MarkerDragEnd", marker.tag.toString())
+    }
+
+    override fun onMarkerDragStart(marker: Marker) {
+        Log.i("MarkerDragStart", marker.tag.toString())
     }
 }
