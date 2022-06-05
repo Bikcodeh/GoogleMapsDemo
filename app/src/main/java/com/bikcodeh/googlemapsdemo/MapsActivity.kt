@@ -20,6 +20,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.bikcodeh.googlemapsdemo.databinding.ActivityMapsBinding
 import com.bikcodeh.googlemapsdemo.misc.CameraAndViewport
+import com.bikcodeh.googlemapsdemo.misc.CustomInfoAdapter
 import com.bikcodeh.googlemapsdemo.misc.TypeAndStyle
 import com.google.android.gms.maps.model.*
 import kotlinx.coroutines.delay
@@ -107,6 +108,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         }
         map.setOnMarkerClickListener(this)
         map.setOnMarkerDragListener(this)
+        map.setInfoWindowAdapter(CustomInfoAdapter(this))
 
         /** (left, top, right, bottom)
             Padding to move the zooming controls when maybe the app is using some drawer */
