@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -31,7 +32,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         binding = ActivityMapsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        /** Obtain the SupportMapFragment and get notified when the map is ready to be used. */
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
@@ -50,31 +51,31 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
 
-        // Add a marker in Sydney and move the camera
+        /** Add a marker in Sydney and move the camera */
         val losAngeles = LatLng(34.051841600403634, -118.24025417915313)
         val newYork = LatLng(40.6976637,-74.119764)
         map.addMarker(MarkerOptions().position(losAngeles).title("Marker in Los Angeles"))
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(losAngeles, 10f))
         //map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraAndViewport.losAngeles))
         map.uiSettings.apply {
-            //Buttons for zooming in and zooming out - false by default
+            /** Buttons for zooming in and zooming out - false by default */
             isZoomControlsEnabled = true
-            //Gestures to zooming in or zooming out with taps and so on
+            /** Gestures to zooming in or zooming out with taps and so on */
             //isZoomGesturesEnabled = false
-            //Not move the map, static position
+            /** Not move the map, static position */
             //isScrollGesturesEnabled = false
         }
 
-        //(left, top, right, bottom)
-        //Padding to move the zooming controls when maybe the app is using some drawer
+        /** (left, top, right, bottom)
+            Padding to move the zooming controls when maybe the app is using some drawer */
         //map.setPadding(0, 0, 300, 0)
         typeAndStyle.setMapStyle(map, this)
 
-        //Set min and max zoom in all devices
+        /** Set min and max zoom in all devices */
         //map.setMinZoomPreference(15f)
         //map.setMaxZoomPreference(17f)
 
-        /* Programmatically set zoom */
+        /** Programmatically set zoom */
 
         /*lifecycleScope.launch {
             delay(4000L)
@@ -83,16 +84,34 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         lifecycleScope.launch {
             delay(4000L)
-            //To move the camera position but without animation
+            /** To move the camera position but without animation */
             //map.moveCamera(CameraUpdateFactory.newLatLng(newYork))
-            //To move the camera position in axis X and axis Y without animation
+            /** To move the camera position in axis X and axis Y without animation */
             //map.moveCamera(CameraUpdateFactory.scrollBy(-200f, 100f))
-            //To use bounds to set some specific area
+            /** To use bounds to set some specific area */
             //map.moveCamera(CameraUpdateFactory.newLatLngBounds(cameraAndViewport.newYorkBounds, 100))
-            //To use bounds to set some specific center area between two latlng areas with some specific zoom value
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(cameraAndViewport.melbourneBounds.center, 10f))
-            //Restrict user from scrolling only in the bounds
-            map.setLatLngBoundsForCameraTarget(cameraAndViewport.melbourneBounds)
+            /** To use bounds to set some specific center area between two latlng areas with some specific zoom value */
+            //map.moveCamera(CameraUpdateFactory.newLatLngZoom(cameraAndViewport.melbourneBounds.center, 10f))
+            /** Animate the move of the camera with a duration a null callback */
+            //map.animateCamera(CameraUpdateFactory.newLatLngZoom(cameraAndViewport.melbourneBounds.center, 10f), 2000, null)
+            /** Animate zoom */
+            //map.animateCamera(CameraUpdateFactory.zoomTo(15f), 2000, null)
+            /**  Animate scroll */
+            //map.animateCamera(CameraUpdateFactory.scrollBy(-200f, 100f))
+            /** Restrict user from scrolling only in the bounds */
+            //map.setLatLngBoundsForCameraTarget(cameraAndViewport.melbourneBounds)
+            /** Animate Camera position object */
+            //map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraAndViewport.losAngeles), 2000, null)
+            /** Animate with callback */
+            map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraAndViewport.losAngeles), 2000, object: GoogleMap.CancelableCallback {
+                override fun onCancel() {
+                    Toast.makeText(this@MapsActivity, "Canceled animation", Toast.LENGTH_SHORT).show()
+                }
+
+                override fun onFinish() {
+                    Toast.makeText(this@MapsActivity, "Finished animation", Toast.LENGTH_SHORT).show()
+                }
+            })
         }
 
     }
