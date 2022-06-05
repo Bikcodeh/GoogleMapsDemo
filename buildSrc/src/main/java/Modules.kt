@@ -31,12 +31,18 @@ object Modules {
             const val material = "1.6.0"
             const val maps = "18.0.2"
             const val constraintLayout = "2.1.4"
+            const val lifecycleRuntime = "2.2.0"
+            const val coroutinesCore = "1.4.1"
+            const val coroutinesAndroid = "1.3.9"
         }
         const val coreKtxLib = "androidx.core:core-ktx:${Versions.coreKtx}"
         const val appCompatLib = "androidx.appcompat:appcompat:${Versions.appCompat}"
         const val materialLib = "com.google.android.material:material:${Versions.material}"
         const val mapsLib = "com.google.android.gms:play-services-maps:${Versions.maps}"
         const val constraintLayoutLib = "androidx.constraintlayout:constraintlayout:${Versions.constraintLayout}"
+        const val lifecycleRuntimeLib = "androidx.lifecycle:lifecycle-runtime-ktx:${Versions.lifecycleRuntime}"
+        const val coroutinesCoreLib = "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.coroutinesCore}"
+        const val coroutinesAndroidLib = "org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.coroutinesAndroid}"
     }
 
     object TestLibraries {

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import androidx.lifecycle.lifecycleScope
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -16,6 +17,8 @@ import com.bikcodeh.googlemapsdemo.databinding.ActivityMapsBinding
 import com.bikcodeh.googlemapsdemo.misc.CameraAndViewport
 import com.bikcodeh.googlemapsdemo.misc.TypeAndStyle
 import com.google.android.gms.maps.model.MapStyleOptions
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.lang.Exception
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -68,5 +71,17 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         //Padding to move the zooming controls when maybe the app is using some drawer
         //map.setPadding(0, 0, 300, 0)
         typeAndStyle.setMapStyle(map, this)
+
+        //Set min and max zoom in all devices
+        //map.setMinZoomPreference(15f)
+        //map.setMaxZoomPreference(17f)
+
+        /* Programmatically set zoom */
+
+        /*lifecycleScope.launch {
+            delay(4000L)
+            map.moveCamera(CameraUpdateFactory.zoomBy(3f))
+        }*/
+
     }
 }
