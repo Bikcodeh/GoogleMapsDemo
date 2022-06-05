@@ -89,7 +89,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             //To move the camera position but without animation
             //map.moveCamera(CameraUpdateFactory.newLatLng(newYork))
             //To move the camera position in axis X and axis Y without animation
-            map.moveCamera(CameraUpdateFactory.scrollBy(-200f, 100f))
+            //map.moveCamera(CameraUpdateFactory.scrollBy(-200f, 100f))
+            //To use bounds to set some specific area
+            //map.moveCamera(CameraUpdateFactory.newLatLngBounds(cameraAndViewport.newYorkBounds, 100))
+            //To use bounds to set some specific center area between two latlng areas with some specific zoom value
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(cameraAndViewport.newYorkBounds.center, 10f))
         }
 
     }
