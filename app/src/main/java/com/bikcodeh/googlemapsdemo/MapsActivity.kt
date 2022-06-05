@@ -75,6 +75,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             MarkerOptions()
                 .position(losAngeles2)
                 .title("Marker in Los Angeles2")
+                .snippet("Some random text")
                 //.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker))
                 .zIndex(1f)
         )
@@ -83,6 +84,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             MarkerOptions()
                 .position(losAngeles)
                 .title("Marker in Los Angeles")
+                .snippet("Some random text")
                 //.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker))
         )
         /** Custom marker from drawable with a specific color */
@@ -174,9 +176,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
     override fun onMarkerClick(marker: Marker): Boolean {
         Log.i("Marker tag", marker.tag.toString())
-
-        //If returns true, the marker's title won't show it
-        return false
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.position, 17f), 2000, null)
+        marker.showInfoWindow()
+        //If returns true, the marker's title won't show it unless you show it programmatically
+        return true
     }
 
     override fun onMarkerDrag(marker: Marker) {
