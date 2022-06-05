@@ -2,6 +2,7 @@ package com.bikcodeh.googlemapsdemo
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -16,10 +17,11 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.bikcodeh.googlemapsdemo.databinding.ActivityMapsBinding
 import com.bikcodeh.googlemapsdemo.misc.CameraAndViewport
 import com.bikcodeh.googlemapsdemo.misc.TypeAndStyle
+import com.google.android.gms.maps.model.Marker
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
+class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
     private lateinit var map: GoogleMap
     private lateinit var binding: ActivityMapsBinding
@@ -54,7 +56,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         /** Add a marker in Sydney and move the camera */
         val losAngeles = LatLng(34.051841600403634, -118.24025417915313)
         val newYork = LatLng(40.6976637,-74.119764)
-        map.addMarker(MarkerOptions().position(losAngeles).title("Marker in Los Angeles"))
+        val losAngelesMarker = map.addMarker(MarkerOptions().position(losAngeles).title("Marker in Los Angeles"))
+        losAngelesMarker?.tag = "Restaurant"
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(losAngeles, 10f))
         //map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraAndViewport.losAngeles))
         map.uiSettings.apply {
@@ -65,6 +68,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             /** Not move the map, static position */
             //isScrollGesturesEnabled = false
         }
+        map.setOnMarkerClickListener(this)
 
         /** (left, top, right, bottom)
             Padding to move the zooming controls when maybe the app is using some drawer */
@@ -84,6 +88,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         lifecycleScope.launch {
             delay(4000L)
+            /** How to remove a specific marker */
+            //losAngelesMarker?.remove()
             /** To move the camera position but without animation */
             //map.moveCamera(CameraUpdateFactory.newLatLng(newYork))
             /** To move the camera position in axis X and axis Y without animation */
@@ -113,8 +119,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 }
             })
         }
-        onMapClicked()
-        onMapLongClicked()
+        //onMapClicked()
+        //onMapLongClicked()
     }
 
     private fun onMapClicked() {
@@ -128,5 +134,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             Toast.makeText(this@MapsActivity, "Long click", Toast.LENGTH_SHORT).show()
             map.addMarker(MarkerOptions().position(it).title("New marker"))
         }
+    }
+
+    override fun onMarkerClick(marker: Marker): Boolean {
+        Log.i("Marker tag", marker.tag.toString())
+
+        //If returns true, the marker's title won't show it
+        return false
     }
 }
