@@ -55,9 +55,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         // Add a marker in Sydney and move the camera
         val losAngeles = LatLng(34.051841600403634, -118.24025417915313)
+        val newYork = LatLng(40.6976637,-74.119764)
         map.addMarker(MarkerOptions().position(losAngeles).title("Marker in Los Angeles"))
-        //map.moveCamera(CameraUpdateFactory.newLatLngZoom(losAngeles, 10f))
-        map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraAndViewport.losAngeles))
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(losAngeles, 10f))
+        //map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraAndViewport.losAngeles))
         map.uiSettings.apply {
             //Buttons for zooming in and zooming out - false by default
             isZoomControlsEnabled = true
@@ -82,6 +83,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             delay(4000L)
             map.moveCamera(CameraUpdateFactory.zoomBy(3f))
         }*/
+
+        lifecycleScope.launch {
+            delay(4000L)
+            //To move the camera position but without animation
+            //map.moveCamera(CameraUpdateFactory.newLatLng(newYork))
+            //To move the camera position in axis X and axis Y without animation
+            map.moveCamera(CameraUpdateFactory.scrollBy(-200f, 100f))
+        }
 
     }
 }
