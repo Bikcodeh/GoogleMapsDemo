@@ -2,7 +2,6 @@ package com.bikcodeh.googlemapsdemo
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.lifecycle.lifecycleScope
@@ -16,10 +15,8 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.bikcodeh.googlemapsdemo.databinding.ActivityMapsBinding
 import com.bikcodeh.googlemapsdemo.misc.CameraAndViewport
 import com.bikcodeh.googlemapsdemo.misc.TypeAndStyle
-import com.google.android.gms.maps.model.MapStyleOptions
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.lang.Exception
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -93,7 +90,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             //To use bounds to set some specific area
             //map.moveCamera(CameraUpdateFactory.newLatLngBounds(cameraAndViewport.newYorkBounds, 100))
             //To use bounds to set some specific center area between two latlng areas with some specific zoom value
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(cameraAndViewport.newYorkBounds.center, 10f))
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(cameraAndViewport.melbourneBounds.center, 10f))
+            //Restrict user from scrolling only in the bounds
+            map.setLatLngBoundsForCameraTarget(cameraAndViewport.melbourneBounds)
         }
 
     }

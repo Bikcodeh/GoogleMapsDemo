@@ -13,7 +13,7 @@ class CameraAndViewport {
         .tilt(45f)
         .build()
 
-    val newYorkBounds = LatLngBounds(
+    val melbourneBounds = LatLngBounds(
         LatLng(-38.3652522458361, 144.70407938022473), //South West
         LatLng(-37.50962829899587, 145.366005606716) //North East
     )
