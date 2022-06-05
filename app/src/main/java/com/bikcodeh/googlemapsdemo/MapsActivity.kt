@@ -113,6 +113,20 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 }
             })
         }
+        onMapClicked()
+        onMapLongClicked()
+    }
 
+    private fun onMapClicked() {
+        map.setOnMapClickListener {
+            Toast.makeText(this@MapsActivity, "Single click", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun onMapLongClicked() {
+        map.setOnMapLongClickListener {
+            Toast.makeText(this@MapsActivity, "Long click", Toast.LENGTH_SHORT).show()
+            map.addMarker(MarkerOptions().position(it).title("New marker"))
+        }
     }
 }
