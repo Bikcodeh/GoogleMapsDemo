@@ -59,6 +59,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
         /** Add a marker in Sydney and move the camera */
         val losAngeles = LatLng(34.051841600403634, -118.24025417915313)
+        val losAngeles2 = LatLng(34.00063704769043, -118.24884200288899)
         val newYork = LatLng(40.6976637,-74.119764)
         //A marker set in los angeles draggable
         //val losAngelesMarker = map.addMarker(MarkerOptions().position(losAngeles).title("Marker in Los Angeles").draggable(true))
@@ -69,12 +70,20 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                 .title("Marker in Los Angeles")
                 .icon(BitmapDescriptorFactory.defaultMarker(134f))
         )*/
+        /** Add property zIndex to set the visibility of the marker above others*/
+        val losAngelesMarker2 = map.addMarker(
+            MarkerOptions()
+                .position(losAngeles2)
+                .title("Marker in Los Angeles2")
+                //.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker))
+                .zIndex(1f)
+        )
         /** Change marker for png marker */
         val losAngelesMarker = map.addMarker(
             MarkerOptions()
                 .position(losAngeles)
                 .title("Marker in Los Angeles")
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker))
+                //.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker))
         )
         /** Custom marker from drawable with a specific color */
         /*val losAngelesMarker = map.addMarker(
