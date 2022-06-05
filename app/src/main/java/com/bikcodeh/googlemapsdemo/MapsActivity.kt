@@ -13,6 +13,8 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.bikcodeh.googlemapsdemo.databinding.ActivityMapsBinding
+import com.bikcodeh.googlemapsdemo.misc.CameraAndViewport
+import com.bikcodeh.googlemapsdemo.misc.TypeAndStyle
 import com.google.android.gms.maps.model.MapStyleOptions
 import java.lang.Exception
 
@@ -20,6 +22,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var map: GoogleMap
     private lateinit var binding: ActivityMapsBinding
+    private val typeAndStyle by lazy { TypeAndStyle() }
+    private val cameraAndViewport by lazy { CameraAndViewport() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,23 +43,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId){
-            R.id.normal_map -> {
-                map.mapType = GoogleMap.MAP_TYPE_NORMAL
-            }
-            R.id.hybrid_map -> {
-                map.mapType = GoogleMap.MAP_TYPE_HYBRID
-            }
-            R.id.satellite_map -> {
-                map.mapType = GoogleMap.MAP_TYPE_SATELLITE
-            }
-            R.id.terrain_map -> {
-                map.mapType = GoogleMap.MAP_TYPE_TERRAIN
-            }
-            R.id.none_map -> {
-                map.mapType = GoogleMap.MAP_TYPE_NONE
-            }
-        }
+        typeAndStyle.setMapType(item, map)
         return true
     }
 
@@ -65,7 +53,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         // Add a marker in Sydney and move the camera
         val losAngeles = LatLng(34.051841600403634, -118.24025417915313)
         map.addMarker(MarkerOptions().position(losAngeles).title("Marker in Los Angeles"))
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(losAngeles, 10f))
+        //map.moveCamera(CameraUpdateFactory.newLatLngZoom(losAngeles, 10f))
+        map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraAndViewport.losAngeles))
         map.uiSettings.apply {
             //Buttons for zooming in and zooming out - false by default
             isZoomControlsEnabled = true
@@ -78,23 +67,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         //(left, top, right, bottom)
         //Padding to move the zooming controls when maybe the app is using some drawer
         //map.setPadding(0, 0, 300, 0)
-        setMapStyle(map)
-    }
-
-    private fun setMapStyle(map: GoogleMap) {
-        try {
-            val success = map.setMapStyle(
-                MapStyleOptions.loadRawResourceStyle(
-                    this,
-                    R.raw.map_style
-                )
-            )
-
-            if (!success) {
-               Log.e("Error aplying style", "Error Map")
-            }
-        } catch (e: Exception) {
-            Log.e("Error aplying style", e.message ?: "Error style map")
-        }
+        typeAndStyle.setMapStyle(map, this)
     }
 }
