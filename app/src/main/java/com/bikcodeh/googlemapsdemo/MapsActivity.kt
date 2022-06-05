@@ -1,23 +1,27 @@
 package com.bikcodeh.googlemapsdemo
 
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.core.content.res.ResourcesCompat
+import androidx.core.graphics.drawable.DrawableCompat
 import androidx.lifecycle.lifecycleScope
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
 import com.bikcodeh.googlemapsdemo.databinding.ActivityMapsBinding
 import com.bikcodeh.googlemapsdemo.misc.CameraAndViewport
 import com.bikcodeh.googlemapsdemo.misc.TypeAndStyle
-import com.google.android.gms.maps.model.Marker
+import com.google.android.gms.maps.model.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -57,7 +61,28 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         val losAngeles = LatLng(34.051841600403634, -118.24025417915313)
         val newYork = LatLng(40.6976637,-74.119764)
         //A marker set in los angeles draggable
-        val losAngelesMarker = map.addMarker(MarkerOptions().position(losAngeles).title("Marker in Los Angeles").draggable(true))
+        //val losAngelesMarker = map.addMarker(MarkerOptions().position(losAngeles).title("Marker in Los Angeles").draggable(true))
+        /** Change marker's color with HUE value, we can find some color with HSL calculator https://www.w3schools.com/colors/colors_hsl.asp */
+        /*val losAngelesMarker = map.addMarker(
+            MarkerOptions()
+                .position(losAngeles)
+                .title("Marker in Los Angeles")
+                .icon(BitmapDescriptorFactory.defaultMarker(134f))
+        )*/
+        /** Change marker for png marker */
+        val losAngelesMarker = map.addMarker(
+            MarkerOptions()
+                .position(losAngeles)
+                .title("Marker in Los Angeles")
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker))
+        )
+        /** Custom marker from drawable with a specific color */
+        /*val losAngelesMarker = map.addMarker(
+            MarkerOptions()
+                .position(losAngeles)
+                .title("Marker in Los Angeles")
+                .icon(fromVectorToBitmap(R.drawable.ic_android, Color.parseColor("#000000")))
+        )*/
         losAngelesMarker?.tag = "Restaurant"
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(losAngeles, 10f))
         //map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraAndViewport.losAngeles))
@@ -155,5 +180,22 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
     override fun onMarkerDragStart(marker: Marker) {
         Log.i("MarkerDragStart", marker.tag.toString())
+    }
+
+    private fun fromVectorToBitmap(id: Int, color: Int): BitmapDescriptor {
+        val vectorDrawable: Drawable? = ResourcesCompat.getDrawable(resources, id, null)
+        if (vectorDrawable == null) {
+            return BitmapDescriptorFactory.defaultMarker()
+        }
+        val bitmap = Bitmap.createBitmap(
+            vectorDrawable.intrinsicWidth,
+            vectorDrawable.minimumHeight,
+            Bitmap.Config.ARGB_8888
+        )
+        val canvas = Canvas(bitmap)
+        vectorDrawable.setBounds(0, 0, canvas.width, canvas.height)
+        DrawableCompat.setTint(vectorDrawable, color)
+        vectorDrawable.draw(canvas)
+        return BitmapDescriptorFactory.fromBitmap(bitmap)
     }
 }
