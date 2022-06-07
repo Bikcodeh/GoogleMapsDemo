@@ -21,6 +21,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.bikcodeh.googlemapsdemo.databinding.ActivityMapsBinding
 import com.bikcodeh.googlemapsdemo.misc.CameraAndViewport
 import com.bikcodeh.googlemapsdemo.misc.CustomInfoAdapter
+import com.bikcodeh.googlemapsdemo.misc.Overlays
 import com.bikcodeh.googlemapsdemo.misc.TypeAndStyle
 import com.google.android.gms.maps.model.*
 import kotlinx.coroutines.delay
@@ -32,6 +33,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     private lateinit var binding: ActivityMapsBinding
     private val typeAndStyle by lazy { TypeAndStyle() }
     private val cameraAndViewport by lazy { CameraAndViewport() }
+    private val overlays by lazy { Overlays() }
 
     private val losAngeles = LatLng(34.051841600403634, -118.24025417915313)
     private val newYork = LatLng(40.6976637,-74.119764)
@@ -128,6 +130,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             map.moveCamera(CameraUpdateFactory.zoomBy(3f))
         }*/
 
+        val overlay = overlays.addGroundOverlay(map)
+
         lifecycleScope.launch {
             delay(4000L)
             /** How to remove a specific marker */
@@ -160,6 +164,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                     Toast.makeText(this@MapsActivity, "Finished animation", Toast.LENGTH_SHORT).show()
                 }
             })*/
+
+            /** to remove the overlay*/
+            //overlay?.remove()
+            /** to set the transparency of the overlay */
+            //overlay?.transparency = 0.5f
         }
         //onMapClicked()
         //onMapLongClicked()
