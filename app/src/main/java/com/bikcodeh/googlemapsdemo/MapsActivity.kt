@@ -224,6 +224,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             width(20f)
             color(Color.BLUE)
             pattern(pattern)
+            /** With this property, when in some point there is a union between two points like V the corner will be
+             * rounded or bevel for more visual friendly with the user */
+            //jointType(JointType.BEVEL)
         })
     }
 }
