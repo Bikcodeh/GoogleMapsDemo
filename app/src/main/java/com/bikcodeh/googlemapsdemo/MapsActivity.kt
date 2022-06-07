@@ -216,10 +216,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     }
 
     private fun addPolyline() {
+        //val pattern = listOf(Dot(), Gap(30f)) only circles
+        //val pattern = listOf(Dash(30f), Dot(), Gap(30f), Dot()) //circle line circle
+
         val polyline = map.addPolyline(PolylineOptions().apply {
             add(losAngeles, newYork)
-            width(5f)
+            width(20f)
             color(Color.BLUE)
+            pattern(pattern)
         })
     }
 }
