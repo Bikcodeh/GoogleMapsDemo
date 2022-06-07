@@ -33,6 +33,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     private val typeAndStyle by lazy { TypeAndStyle() }
     private val cameraAndViewport by lazy { CameraAndViewport() }
 
+    private val losAngeles = LatLng(34.051841600403634, -118.24025417915313)
+    private val newYork = LatLng(40.6976637,-74.119764)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -59,9 +62,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         map = googleMap
 
         /** Add a marker in Sydney and move the camera */
-        val losAngeles = LatLng(34.051841600403634, -118.24025417915313)
+
         val losAngeles2 = LatLng(34.00063704769043, -118.24884200288899)
-        val newYork = LatLng(40.6976637,-74.119764)
         //A marker set in los angeles draggable
         //val losAngelesMarker = map.addMarker(MarkerOptions().position(losAngeles).title("Marker in Los Angeles").draggable(true))
         /** Change marker's color with HUE value, we can find some color with HSL calculator https://www.w3schools.com/colors/colors_hsl.asp */
@@ -72,14 +74,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                 .icon(BitmapDescriptorFactory.defaultMarker(134f))
         )*/
         /** Add property zIndex to set the visibility of the marker above others*/
-        val losAngelesMarker2 = map.addMarker(
+        /*val losAngelesMarker2 = map.addMarker(
             MarkerOptions()
                 .position(losAngeles2)
                 .title("Marker in Los Angeles2")
                 .snippet("Some random text")
                 //.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker))
                 .zIndex(1f)
-        )
+        )*/
         /** Change marker for png marker */
         val losAngelesMarker = map.addMarker(
             MarkerOptions()
@@ -109,7 +111,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         map.setOnMarkerClickListener(this)
         map.setOnMarkerDragListener(this)
         map.setInfoWindowAdapter(CustomInfoAdapter(this))
-
+        addPolyline()
         /** (left, top, right, bottom)
             Padding to move the zooming controls when maybe the app is using some drawer */
         //map.setPadding(0, 0, 300, 0)
@@ -149,7 +151,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             /** Animate Camera position object */
             //map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraAndViewport.losAngeles), 2000, null)
             /** Animate with callback */
-            map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraAndViewport.losAngeles), 2000, object: GoogleMap.CancelableCallback {
+           /* map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraAndViewport.losAngeles), 2000, object: GoogleMap.CancelableCallback {
                 override fun onCancel() {
                     Toast.makeText(this@MapsActivity, "Canceled animation", Toast.LENGTH_SHORT).show()
                 }
@@ -157,7 +159,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                 override fun onFinish() {
                     Toast.makeText(this@MapsActivity, "Finished animation", Toast.LENGTH_SHORT).show()
                 }
-            })
+            })*/
         }
         //onMapClicked()
         //onMapLongClicked()
@@ -211,5 +213,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         DrawableCompat.setTint(vectorDrawable, color)
         vectorDrawable.draw(canvas)
         return BitmapDescriptorFactory.fromBitmap(bitmap)
+    }
+
+    private fun addPolyline() {
+        val polyline = map.addPolyline(PolylineOptions().apply {
+            add(losAngeles, newYork)
+            width(5f)
+            color(Color.BLUE)
+        })
     }
 }
