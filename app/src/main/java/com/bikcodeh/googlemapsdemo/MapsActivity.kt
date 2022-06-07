@@ -221,12 +221,18 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
         val polyline = map.addPolyline(PolylineOptions().apply {
             add(losAngeles, newYork)
-            width(20f)
+            width(30f)
             color(Color.BLUE)
-            pattern(pattern)
+            //pattern(pattern)
             /** With this property, when in some point there is a union between two points like V the corner will be
              * rounded or bevel for more visual friendly with the user */
             //jointType(JointType.BEVEL)
+            /** RoundCap set the start or end of the polyline in a round shape */
+            //startCap(RoundCap())
+            /** Wen can use a custom Cap for start or end with drawable or some resource, float value is the size */
+            //startCap(CustomCap(BitmapDescriptorFactory.fromResource(R.drawable.marker), 100f))
+            /** ButtCap and SquareCap are the same, a rect line */
+            //endCap(ButtCap())
         })
     }
 }
