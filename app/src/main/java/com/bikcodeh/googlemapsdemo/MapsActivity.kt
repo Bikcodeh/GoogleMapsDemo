@@ -1,33 +1,39 @@
 package com.bikcodeh.googlemapsdemo
 
+import android.Manifest
+import android.annotation.SuppressLint
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.Drawable
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.lifecycle.lifecycleScope
-
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
 import com.bikcodeh.googlemapsdemo.databinding.ActivityMapsBinding
 import com.bikcodeh.googlemapsdemo.misc.CameraAndViewport
 import com.bikcodeh.googlemapsdemo.misc.CustomInfoAdapter
 import com.bikcodeh.googlemapsdemo.misc.Overlays
 import com.bikcodeh.googlemapsdemo.misc.TypeAndStyle
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener, GoogleMap.OnMarkerDragListener {
+class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener,
+    GoogleMap.OnMarkerDragListener {
 
     private lateinit var map: GoogleMap
     private lateinit var binding: ActivityMapsBinding
@@ -35,8 +41,20 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     private val cameraAndViewport by lazy { CameraAndViewport() }
     private val overlays by lazy { Overlays() }
 
+    /** a different way to request a permission */
+    @SuppressLint("MissingPermission")
+    private val requestPermission =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
+            if (isGranted) {
+                Toast.makeText(this, "Granted!", Toast.LENGTH_SHORT).show()
+                map.isMyLocationEnabled = true
+            } else {
+                Toast.makeText(this, "We need your permission", Toast.LENGTH_SHORT).show()
+            }
+        }
+
     private val losAngeles = LatLng(34.051841600403634, -118.24025417915313)
-    private val newYork = LatLng(40.6976637,-74.119764)
+    private val newYork = LatLng(40.6976637, -74.119764)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -90,7 +108,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                 .position(losAngeles)
                 .title("Marker in Los Angeles")
                 .snippet("Some random text")
-                //.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker))
+            //.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker))
         )
         /** Custom marker from drawable with a specific color */
         /*val losAngelesMarker = map.addMarker(
@@ -115,7 +133,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         map.setInfoWindowAdapter(CustomInfoAdapter(this))
         addPolyline()
         /** (left, top, right, bottom)
-            Padding to move the zooming controls when maybe the app is using some drawer */
+        Padding to move the zooming controls when maybe the app is using some drawer */
         //map.setPadding(0, 0, 300, 0)
         typeAndStyle.setMapStyle(map, this)
 
@@ -155,15 +173,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             /** Animate Camera position object */
             //map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraAndViewport.losAngeles), 2000, null)
             /** Animate with callback */
-           /* map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraAndViewport.losAngeles), 2000, object: GoogleMap.CancelableCallback {
-                override fun onCancel() {
-                    Toast.makeText(this@MapsActivity, "Canceled animation", Toast.LENGTH_SHORT).show()
-                }
+            /* map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraAndViewport.losAngeles), 2000, object: GoogleMap.CancelableCallback {
+                 override fun onCancel() {
+                     Toast.makeText(this@MapsActivity, "Canceled animation", Toast.LENGTH_SHORT).show()
+                 }
 
-                override fun onFinish() {
-                    Toast.makeText(this@MapsActivity, "Finished animation", Toast.LENGTH_SHORT).show()
-                }
-            })*/
+                 override fun onFinish() {
+                     Toast.makeText(this@MapsActivity, "Finished animation", Toast.LENGTH_SHORT).show()
+                 }
+             })*/
 
             /** to remove the overlay*/
             //overlay?.remove()
@@ -172,6 +190,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         }
         //onMapClicked()
         //onMapLongClicked()
+        checkLocationPermission()
     }
 
     private fun onMapClicked() {
@@ -243,5 +262,49 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             /** ButtCap and SquareCap are the same, a rect line */
             //endCap(ButtCap())
         })
+    }
+
+    private fun checkLocationPermission() {
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            map.isMyLocationEnabled = true
+            Toast.makeText(this, "already enabled", Toast.LENGTH_SHORT).show()
+        } else {
+            //requestPermission()
+            requestPermission.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+        }
+    }
+
+    /** request a permission or some of them */
+    private fun requestPermission() {
+        ActivityCompat.requestPermissions(
+            this,
+            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+            1
+        )
+    }
+
+    @SuppressLint("MissingPermission")
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+
+        /** when we use the requestPermission function, so we have to validate the request code */
+        /** this block is commented cause and requesting the permission with the launcher */
+        /*if (requestCode != 1) {
+            return
+        }*/
+        if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(this, "Granted!", Toast.LENGTH_SHORT).show()
+            map.isMyLocationEnabled = true
+        } else {
+            Toast.makeText(this, "We need your permission", Toast.LENGTH_SHORT).show()
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 }
